@@ -16,6 +16,10 @@ This is not an official OpenAI package. It is a community setup for Codex.
 
 ## What Is Included
 
+- `install.sh`
+  - one-command installer/update entrypoint
+- `scripts/install_or_update.py`
+  - idempotent install/upgrade script with dry-run support
 - `config_append.toml`
   - config snippet for `gpt-5.4`, `/review`, and `[agents]`
 - `reviewer.toml`
@@ -27,7 +31,9 @@ This is not an official OpenAI package. It is a community setup for Codex.
 - `skill/karpathy-subagent-mode/SKILL.md`
   - Karpathy-style discipline layer for Codex
 - `README_INSTALL.md`
-  - quick install instructions
+  - install and upgrade instructions
+- `CHANGELOG.md`
+  - release notes for tags and upgrades
 
 ## Why This Setup
 
@@ -51,13 +57,30 @@ In practice, this means:
 
 Full steps are in [README_INSTALL.md](README_INSTALL.md).
 
-Quick version:
+Normal install:
 
-1. Copy `reviewer.toml` and `debugger.toml` into `~/.codex/agents/`
-2. Merge `config_append.toml` into `~/.codex/config.toml`
-3. Append `global_AGENTS_append.md` to `~/.codex/AGENTS.md`
-4. Copy `skill/karpathy-subagent-mode/SKILL.md` into `$HOME/.agents/skills/karpathy-subagent-mode/SKILL.md`
-5. Restart Codex
+```bash
+./install.sh
+```
+
+Upgrade an existing setup:
+
+```bash
+./install.sh
+```
+
+Dry run against your real home directory:
+
+```bash
+./install.sh --dry-run
+```
+
+Test against a temporary fake home:
+
+```bash
+TMP_HOME="$(mktemp -d)"
+./install.sh --home "$TMP_HOME"
+```
 
 ## Recommended Result
 
@@ -74,6 +97,17 @@ After installation, Codex should:
 ```bash
 codex -a never exec --color never "Summarize the current instructions. Confirm whether the skill karpathy-subagent-mode is available, confirm whether the custom agents reviewer and debugger are available, and explain when each should be used."
 ```
+
+## Releases
+
+This repository uses simple semantic tags and a human-readable changelog:
+
+- `v1.0.0`
+  - initial public bundle
+- `v1.1.0`
+  - proper installer/update flow, changelog, and upgrade-safe behavior
+
+See [CHANGELOG.md](CHANGELOG.md) for details.
 
 ## License
 
