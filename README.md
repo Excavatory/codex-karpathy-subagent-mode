@@ -18,6 +18,32 @@ This is not an official OpenAI package. It is a community setup for Codex.
 
 Это не официальный пакет OpenAI. Это community-настройка для Codex.
 
+## Коротко по-русски
+
+Этот репозиторий нужен, если вы хотите быстро поставить для Codex более строгий инженерный режим работы:
+
+- `gpt-5.4` как основную модель
+- `gpt-5.4` для `/review`
+- именованных сабагентов `reviewer` и `debugger`
+- обязательный workflow, где для багов сначала идёт `debugger`, а перед завершением нетривиальной задачи обязательно запускаются `reviewer` и `debugger`
+- дополнительный слой дисциплины через skill `karpathy-subagent-mode`
+
+Быстрый старт:
+
+```bash
+./install.sh
+./self-test.sh
+```
+
+Что проверяет `self-test.sh`:
+
+- что fixture действительно падает до запуска Codex
+- что Codex реально вызывает reviewer/debugger-подобный workflow
+- что в финальном ответе есть обязательные секции
+- что после правки fixture проходит проверку
+
+Если вам удобнее читать по-русски, начните с [README_INSTALL.md](README_INSTALL.md): там ниже тоже добавлена краткая русская версия инструкции по установке и обновлению.
+
 ## What Is Included
 
 - `install.sh`

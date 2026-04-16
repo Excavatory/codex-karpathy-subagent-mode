@@ -1,5 +1,32 @@
 # Install or Upgrade the Karpathy + GPT-5.4 subagent bundle for Codex
 
+## Коротко по-русски
+
+Если вам нужна короткая версия:
+
+```bash
+./install.sh
+./self-test.sh
+```
+
+Что делает `install.sh`:
+
+- создаёт недостающие каталоги
+- аккуратно обновляет `~/.codex/config.toml`
+- ставит или обновляет `reviewer.toml` и `debugger.toml`
+- ставит или обновляет skill `karpathy-subagent-mode`
+- добавляет bridge-блок в `~/.codex/AGENTS.md` без дублей
+- делает backup, если меняет уже существующие файлы
+
+Что делает `self-test.sh`:
+
+- запускает проверку на маленьком fixture с известным багом
+- подтверждает, что Codex реально использует reviewer/debugger-style workflow
+- проверяет, что итоговый ответ содержит обязательные секции
+- убеждается, что после правки fixture проходит тест
+
+Если нужен полностью ручной сценарий без installer, он описан ниже в этом же файле.
+
 ## Preferred path
 
 ```bash
