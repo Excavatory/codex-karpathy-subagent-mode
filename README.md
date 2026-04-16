@@ -20,6 +20,10 @@ This is not an official OpenAI package. It is a community setup for Codex.
   - one-command installer/update entrypoint
 - `scripts/install_or_update.py`
   - idempotent install/upgrade script with dry-run support
+- `self-test.sh`
+  - one-command behavior self-test entrypoint
+- `scripts/self_test.py`
+  - fixture-based self-test that checks real subagent triggering and final response structure
 - `config_append.toml`
   - config snippet for `gpt-5.4`, `/review`, and `[agents]`
 - `reviewer.toml`
@@ -30,6 +34,8 @@ This is not an official OpenAI package. It is a community setup for Codex.
   - append-only bridge for `~/.codex/AGENTS.md`
 - `skill/karpathy-subagent-mode/SKILL.md`
   - Karpathy-style discipline layer for Codex
+- `fixtures/python_divide_bug/`
+  - tiny known-bug repo used to verify trigger behavior on a real fix task
 - `README_INSTALL.md`
   - install and upgrade instructions
 - `CHANGELOG.md`
@@ -98,6 +104,48 @@ After installation, Codex should:
 codex -a never exec --color never "Summarize the current instructions. Confirm whether the skill karpathy-subagent-mode is available, confirm whether the custom agents reviewer and debugger are available, and explain when each should be used."
 ```
 
+## Behavior Self-Test
+
+This repository now includes a real behavior self-test, not just visibility checks.
+
+Run it after installation:
+
+```bash
+./self-test.sh
+```
+
+What it verifies on a real fixture repo:
+
+- the baseline fixture actually fails before Codex runs
+- Codex emits debugger-style and reviewer-style `spawn_agent` workflow events
+- the final answer contains these required sections:
+  - `Changes made`
+  - `Checks run`
+  - `Reviewer findings fixed`
+  - `Debugger findings fixed`
+  - `Remaining risks`
+  - `Unverified assumptions`
+- the fixture passes after the Codex run
+- the working-tree mutation surface stays pinned to `calc.py`, so the run cannot pass by rewriting the test or dropping in helper files
+
+How it runs:
+
+- the script copies the fixture into a disposable temporary git repo
+- Codex is pointed at that disposable repo, not your active project checkout
+- the self-test uses an unsandboxed Codex run on purpose so the fixture can actually be fixed and re-validated end to end on current Codex builds
+- by default it still uses your current `HOME`, because the point is to validate your live Codex installation and installed agents/skills
+- treat it as a trusted-machine diagnostic, not a sandbox boundary
+
+Useful options:
+
+```bash
+./self-test.sh --timeout-seconds 300
+./self-test.sh --keep-temp
+./self-test.sh --home /path/to/home
+```
+
+With `--keep-temp`, artifacts are copied to `.selftest-last-success/` or `.selftest-last-failure/` in the repository root.
+
 ## Releases
 
 This repository uses simple semantic tags and a human-readable changelog:
@@ -106,6 +154,8 @@ This repository uses simple semantic tags and a human-readable changelog:
   - initial public bundle
 - `v1.1.0`
   - proper installer/update flow, changelog, and upgrade-safe behavior
+- `v1.2.0`
+  - fixture-based behavior self-test for real reviewer/debugger workflow validation
 
 See [CHANGELOG.md](CHANGELOG.md) for details.
 

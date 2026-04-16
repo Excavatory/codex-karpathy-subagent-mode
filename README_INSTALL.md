@@ -67,6 +67,32 @@ Restart the Codex CLI, desktop app, or IDE session so it picks up the new files.
 codex -a never exec --color never "Summarize the current instructions. Confirm whether the skill karpathy-subagent-mode is available, confirm whether the custom agents reviewer and debugger are available, and explain when each should be used."
 ```
 
+## Behavior self-test
+
+After installation, run:
+
+```bash
+./self-test.sh
+```
+
+This verifies real trigger behavior on a tiny known-bug fixture, not just whether files are present.
+
+The script runs Codex against a disposable copy of that fixture, not your active project checkout. It intentionally uses an unsandboxed Codex run for that disposable repo so the test can verify a real edit, a real local re-check, reviewer/debugger-style workflow events, and the required final response sections end to end.
+
+Important safety note:
+
+- by default the self-test still uses your current `HOME`, because it is validating your live Codex installation, config, and installed agents/skills
+- that means the self-test is a trusted-machine diagnostic, not a sandbox boundary
+- if you want to exercise a different Codex home, pass `--home /path/to/home`
+
+The self-test checks:
+
+- the fixture starts in a failing state
+- Codex emits debugger-style and reviewer-style `spawn_agent` events
+- the final message contains the expected workflow sections
+- the fixture ends in a passing state
+- the only allowed working-tree change is `calc.py`
+
 ## Smoke-test prompt
 
 ```bash

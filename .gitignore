@@ -1,3 +1,5 @@
 .DS_Store
 __pycache__/
 *.pyc
+.selftest-last-failure/
+.selftest-last-success/
