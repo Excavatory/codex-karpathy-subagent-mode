@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.1] - 2026-04-16
+
+### Changed
+- Hardened self-test artifact recovery in `scripts/self_test.py`
+- Preserved full Python tracebacks in `.selftest-last-failure/self_test_error.txt` for unexpected internal self-test failures
+- Ensured new success/failure artifact bundles are written before stale opposite artifact directories are removed
+
 ## [1.2.0] - 2026-04-16
 
 ### Added

@@ -156,6 +156,8 @@ This repository uses simple semantic tags and a human-readable changelog:
   - proper installer/update flow, changelog, and upgrade-safe behavior
 - `v1.2.0`
   - fixture-based behavior self-test for real reviewer/debugger workflow validation
+- `v1.2.1`
+  - self-test artifact-recovery hardening and better unexpected-error diagnostics
 
 See [CHANGELOG.md](CHANGELOG.md) for details.
 
