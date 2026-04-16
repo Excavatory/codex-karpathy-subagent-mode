@@ -2,6 +2,8 @@
 
 Karpathy-inspired adaptive instructions for Codex with mandatory `reviewer` and `debugger` subagent workflow.
 
+Адаптивные инструкции для Codex в стиле Karpathy с обязательным workflow через сабагентов `reviewer` и `debugger`.
+
 This repository packages a practical Codex setup for people who want:
 
 - `gpt-5.4` as the main model
@@ -13,6 +15,8 @@ This repository packages a practical Codex setup for people who want:
 - an extra Karpathy-style skill layer that pushes minimal, surgical, goal-driven engineering
 
 This is not an official OpenAI package. It is a community setup for Codex.
+
+Это не официальный пакет OpenAI. Это community-настройка для Codex.
 
 ## What Is Included
 
