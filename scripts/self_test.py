@@ -10,6 +10,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import traceback
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
@@ -180,6 +181,12 @@ def preserve_artifacts(
     return output_dir
 
 
+def remove_artifacts_dir(repo_root: Path, directory_name: str) -> None:
+    output_dir = repo_root / directory_name
+    if output_dir.exists():
+        shutil.rmtree(output_dir)
+
+
 def snapshot_repo_tree(root: Path) -> dict[str, str]:
     snapshot: dict[str, str] = {}
     for path in sorted(root.rglob("*")):
@@ -346,6 +353,18 @@ def main(argv: Iterable[str]) -> int:
                 ".selftest-last-failure",
                 str(exc),
             )
+            remove_artifacts_dir(repo_root, ".selftest-last-success")
+            print(f"- failure_artifacts_saved_to: {failure_dir}")
+            return 1
+        except Exception as exc:
+            print(f"unexpected self-test error: {exc}", file=sys.stderr)
+            failure_dir = preserve_artifacts(
+                temp_root,
+                repo_root,
+                ".selftest-last-failure",
+                f"Unexpected error: {exc}\n\n{traceback.format_exc()}",
+            )
+            remove_artifacts_dir(repo_root, ".selftest-last-success")
             print(f"- failure_artifacts_saved_to: {failure_dir}")
             return 1
 
@@ -368,6 +387,7 @@ def main(argv: Iterable[str]) -> int:
                 repo_root,
                 ".selftest-last-success",
             )
+            remove_artifacts_dir(repo_root, ".selftest-last-failure")
             print(f"- preserved_artifacts: {preserved_dir}")
         elif args.keep_temp:
             print("- preserved_artifacts: will be written to .selftest-last-failure because one or more checks failed")
@@ -381,6 +401,7 @@ def main(argv: Iterable[str]) -> int:
                 ".selftest-last-failure",
                 "One or more self-test checks failed.",
             )
+            remove_artifacts_dir(repo_root, ".selftest-last-success")
             print(f"- failure_artifacts_saved_to: {failure_dir}")
             return 1
 
